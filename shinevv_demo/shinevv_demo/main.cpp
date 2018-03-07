@@ -161,6 +161,14 @@ LRESULT CALLBACK VVCreateWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 
 			break;
 		}
+		case '0':
+		{
+			if (_instance) {
+				SetVideoDevice(_instance,1, NULL);
+			}
+
+			break;
+		}
 		default:
 			break;
 		}

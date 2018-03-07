@@ -36,6 +36,11 @@ extern "C" {
 		Video
 	};
 
+	typedef struct {
+		const char* pDeviceName;
+		int nDeviceIndex;
+	}DeviceInfo;
+
 	/**
 	* 创建shinevv句柄
 	* 业务逻辑 跟随主程序一起创建
@@ -205,6 +210,35 @@ extern "C" {
 		void* handle,
 		const char* pMemberId,
 		void(*DisableMemberAudioResult)(bool bSucc, const char* pMemberId));
+
+	/**
+	* 获取视频设备信息.
+	* @param handle						shinevv句柄
+	* @param GetVideoDevicesResult	获取视频设备信息回调
+	*/
+	SHINEVV_INTERFACE_API void __stdcall GetVideoDevices(
+		void* handle, 
+		void(*GetVideoDevicesResult)(const DeviceInfo sDeviceInfos[], int nDeviceNum));
+
+	/**
+	* 获取音频设备信息.
+	* @param handle						shinevv句柄
+	* @param GetAudioDevicesResult	获取音频设备信息回调
+	*/
+	SHINEVV_INTERFACE_API void __stdcall GetAudioDevices(
+		void* handle,
+		void(*GetAudioDevicesResult)(const DeviceInfo sDeviceInfos[], int nDeviceNum));
+
+	/**
+	* 指定摄像头.
+	* @param handle						shinevv句柄
+	* @param nIndex						摄像头序列号
+	* @param SetVideoDeviceResult	指定摄像头回调
+	*/
+	SHINEVV_INTERFACE_API void __stdcall SetVideoDevice(
+		void* handle,
+		int nIndex,
+		void(*SetVideoDeviceResult)(bool bSucc));
 
 #ifdef __cplusplus
 }
