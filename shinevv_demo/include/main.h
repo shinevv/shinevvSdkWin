@@ -66,4 +66,20 @@ void OnSessionError(const char* reason) {
 	printf("OnSessionError reason = %s\n", reason);
 }
 
+void GetVideoDevicesResult(const DeviceInfo sDeviceInfos[], int nDeviceNum) {
+	for (int i = 0; i < nDeviceNum; i++) {
+		printf("video device[%d], name = %s, index = %d\n", i, sDeviceInfos[i].pDeviceName, sDeviceInfos[i].nDeviceIndex);
+	}
+}
+
+void GetAudioDevicesResult(const DeviceInfo sDeviceInfos[], int nDeviceNum) {
+	for (int i = 0; i < nDeviceNum; i++) {
+		printf("audio device[%d], name = %s, index = %d\n", i, sDeviceInfos[i].pDeviceName, sDeviceInfos[i].nDeviceIndex);
+	}
+}
+
+void SetCameraIndexRes(bool succ) {
+	printf("SetCameraIndexRes = %d\n", succ);
+}
+
 #endif

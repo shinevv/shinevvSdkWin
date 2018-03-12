@@ -33,7 +33,8 @@ extern "C" {
 	*/
 	enum MediaType {
 		Audio = 0,
-		Video
+		Video,
+		None
 	};
 
 	typedef struct {
@@ -65,13 +66,6 @@ extern "C" {
 	* 初始化shinevvSDK.
 	* 业务逻辑 在创建房间时调用
 	* @param handle							shinevv句柄
-	* @param pRoomId						房间号
-	* @param eMediaType						媒体会话类型
-	* @param pMemberId						成员标识符，必须在当前房间中保持唯一
-	* @param pDisplayName					成员昵称
-	* @param pServerIp						服务器IP
-	* @param nPort							服务器端口
-	* @param pToken							认证信息,此为预留接口，目前还没有认证，这里可以给一个任意字符串
 	* @param OnJoined						加入房间回调,调用JoinRoom后会触发
 	* @param OnDisConnected					断开连接回调,当此回调被触发时，要依次调用LeaveRoom()， ReleaseSdk()来释放资源
 	* @param OnNewMemberJoined				新成员加入房间回调，在此回调中调用SetRenderWindow()接口来设置新成员视频渲染窗口句柄
@@ -86,13 +80,6 @@ extern "C" {
 	*/
 	SHINEVV_INTERFACE_API void __stdcall InitSDK(
 		void* handle,
-		const char* pRoomId,
-		MediaType eMediaType,
-		const char* pMemberId,
-		const char* pDisplayName,
-		const char* pServerIp,
-		int nPort,
-		const char* pToken,
 		void(*OnJoined)(ErrorCode eCode),
 		void(*OnDisConnected)(),
 		void(*OnNewMemberJoined)(const char* pMemberId, const char* pDisplayName),
@@ -131,9 +118,23 @@ extern "C" {
 	* 加入房间.
 	* 业务逻辑 在创建房间后，主动开启视频会议时调用
 	* @param handle					shinevv句柄
+	* @param pRoomId						房间号
+	* @param eMediaType						媒体会话类型
+	* @param pMemberId						成员标识符，必须在当前房间中保持唯一
+	* @param pDisplayName					成员昵称
+	* @param pServerIp						服务器IP
+	* @param nPort							服务器端口
+	* @param pToken							认证信息,此为预留接口，目前还没有认证，这里可以给一个任意字符串	
 	*/
 	SHINEVV_INTERFACE_API void __stdcall JoinRoom(
-		void* handle);
+		void* handle,
+		const char* pRoomId,
+		MediaType eMediaType,
+		const char* pMemberId,
+		const char* pDisplayName,
+		const char* pServerIp,
+		int nPort,
+		const char* pToken);
 
 	/**
 	* 离开房间.

@@ -45,12 +45,7 @@ LRESULT CALLBACK VVCreateWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 		{
 			printf("InitSDK\n");
 
-			std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
-			std::string u8str = convert.to_bytes(DISPLAY_NAME);
-
-			_local_peer_id = MEMBER_ID;
-
-			InitSDK(_instance, _roomId.c_str(), MediaType::Video, _local_peer_id.c_str(), u8str.c_str(), "vvroom.shinevv.cn", 3443, "312", OnJoined, OnDisConnected,
+			InitSDK(_instance,  OnJoined, OnDisConnected,
 				OnNewMemberJoined, OnMemberLeft, OnModifyLocalAudioStatus, OnModifyLocalVideoStatus, OnMemberEnableVideo, OnMemberDisableVideo, OnMemberUnMuteAudio, OnMemberMuteAudio, OnSessionError);
 
 			break;
@@ -69,7 +64,12 @@ LRESULT CALLBACK VVCreateWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 
 			SetRenderWindow(_instance, _local_peer_id.c_str(), (void*)_mainWindow, true);
 
-			JoinRoom(_instance);
+			std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
+			std::string u8str = convert.to_bytes(DISPLAY_NAME);
+
+			_local_peer_id = MEMBER_ID;
+
+			JoinRoom(_instance, _roomId.c_str(), MediaType::None, _local_peer_id.c_str(), u8str.c_str(), "vvroom.shinevv.cn", 3443, "312");
 
 			break;
 		}
@@ -164,7 +164,23 @@ LRESULT CALLBACK VVCreateWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 		case '0':
 		{
 			if (_instance) {
-				SetVideoDevice(_instance,1, NULL);
+				SetVideoDevice(_instance, 1, SetCameraIndexRes);
+			}
+
+			break;
+		}
+		case '8':
+		{
+			if (_instance) {
+				GetVideoDevices(_instance, GetVideoDevicesResult);
+			}
+
+			break;
+		}
+		case '9':
+		{
+			if (_instance) {
+				GetAudioDevices(_instance, GetAudioDevicesResult);
 			}
 
 			break;
