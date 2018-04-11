@@ -43,6 +43,20 @@ extern "C" {
 	}DeviceInfo;
 
 	/**
+	* 画笔类型
+	*/
+	enum PenType
+	{
+		LINE_PEN = 1,//画线
+		BRUSH_PEN = 2,//画刷 暂不支持
+		BEELINE_PEN = 3,//直线  暂不支持
+		ARROR_PEN = 4,//箭头 暂不支持
+		RECT_PEN = 5,//画矩形
+		ELLIPSE_PEN = 6,//画椭圆
+		ERASER_PEN = 10,//橡皮擦
+	};
+
+	/**
 	* 创建shinevv句柄
 	* 业务逻辑 跟随主程序一起创建
 	* @return shinevv句柄
@@ -144,6 +158,11 @@ extern "C" {
 	SHINEVV_INTERFACE_API void __stdcall LeaveRoom(
 		void* handle);
 
+
+	/*******************************************
+	* 以下为流媒体相关接口
+	*/
+
 	/**
 	* 改变视频状态.
 	* 业务逻辑 一定要等JoinRoom()的回调通知后才可以调用，改变视频状态的结果由OnModifyLocalVideoStatus回调通知
@@ -234,12 +253,109 @@ extern "C" {
 	* 指定摄像头.
 	* @param handle						shinevv句柄
 	* @param nIndex						摄像头序列号
-	* @param SetVideoDeviceResult	指定摄像头回调
+	* @param SetVideoDeviceResult	    指定摄像头回调
 	*/
 	SHINEVV_INTERFACE_API void __stdcall SetVideoDevice(
 		void* handle,
 		int nIndex,
 		void(*SetVideoDeviceResult)(bool bSucc));
+
+	/**
+	* 指定输入分辨率.
+	* @param handle						shinevv句柄
+	* @param pWidth						宽度
+	* @param pHeight					高度
+	* @param fps						帧率
+	* @param OnGetOutputFormatResult	得到实际输出分辨率回调
+	*/
+	SHINEVV_INTERFACE_API void __stdcall SetInputFormat(
+		void* handle, 
+		int nWidth,
+		int nHeight, 
+		int nfps,
+		void(*OnGetOutputFormatResult)(int nWidth, int nHeight, int fps));
+
+
+	/*******************************************
+	* 以下为画板相关接口
+	*/
+
+	/**
+	* 创建画板.
+	* 业务逻辑 为避免笔画拉伸，宽高比建议为16:9
+	* @param handle						shinevv句柄
+	* @param hwndParent					父窗口句柄，可为NULL
+	* @param nLeft						画板窗口初始水平位置
+	* @param nTop						画板窗口初始垂直位置
+	* @param nWidth						画板宽度
+	* @param nHeight					画板高度
+	* @param bShow						是否显示画板
+	* @param OnCreatePaletteResult		创建画板结果回调
+	*/
+	SHINEVV_INTERFACE_API void __stdcall CreatePaletteInstance(
+		void* handle,
+		void* hwndParent, 
+		int nLeft, 
+		int nTop, 
+		int nWidth, 
+		int nHeight,
+		bool bShow,
+		void(*OnCreatePaletteResult)(bool bSucc));
+
+	/**
+	* 销毁画板.
+	* @param handle						shinevv句柄
+	*/
+	SHINEVV_INTERFACE_API void __stdcall DestoryPaletteInstance(
+		void* handle);
+
+	/**
+	* 显示或隐藏画板.
+	* @param handle						shinevv句柄
+	* @param bShow						是否显示
+	* @param OnShowPaletteResult	    显示或隐藏画板结果回调
+	*/
+	SHINEVV_INTERFACE_API void __stdcall ShowPalette(
+		void* handle,
+		bool bShow,
+		void(*OnShowPaletteResult)(bool bSucc));
+
+	/**
+	* 设置画笔类型.
+	* @param handle						shinevv句柄
+	* @param nType						画笔类型
+	* @param OnSetPalettePenTypeResult	设置画笔类型结果回调
+	*/
+	SHINEVV_INTERFACE_API void __stdcall SetPalettePenType(
+		void* handle,
+		PenType nType,
+		void(*OnSetPalettePenTypeResult)(bool bSucc));
+
+	/**
+	* 设置画笔宽度.
+	* @param handle						shinevv句柄
+	* @param fWidth						画笔宽度
+	* @param OnSetPalettePenTypeResult	设置画笔宽度结果回调
+	*/
+	SHINEVV_INTERFACE_API void __stdcall SetPalettePenWidth(
+		void* handle,
+		float fWidth,
+		void(*OnSetPalettePenWidthResult)(bool bSucc));
+
+	/**
+	* 设置画笔颜色.
+	* @param handle						shinevv句柄
+	* @param uRed						红色分量
+	* @param uGreen						绿色分量
+	* @param uBlue						蓝色分量
+	* @param OnSetPalettePenColorResult	设置画笔颜色结果回调
+	*/
+	SHINEVV_INTERFACE_API void __stdcall SetPalettePenColor(
+		void* handle,
+		unsigned char uRed, 
+		unsigned char uGreen, 
+		unsigned char uBlue,
+		void(*OnSetPalettePenColorResult)(bool bSucc));
 
 #ifdef __cplusplus
 }
