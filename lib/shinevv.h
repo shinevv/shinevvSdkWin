@@ -80,6 +80,7 @@ extern "C" {
 	* 初始化shinevvSDK.
 	* 业务逻辑 在创建房间时调用
 	* @param handle							shinevv句柄
+	* @param userData						用户自定义数据
 	* @param OnJoined						加入房间回调,调用JoinRoom后会触发
 	* @param OnDisConnected					断开连接回调,当此回调被触发时，要依次调用LeaveRoom()， ReleaseSdk()来释放资源
 	* @param OnNewMemberJoined				新成员加入房间回调，在此回调中调用SetRenderWindow()接口来设置新成员视频渲染窗口句柄
@@ -94,17 +95,18 @@ extern "C" {
 	*/
 	SHINEVV_INTERFACE_API void __stdcall InitSDK(
 		void* handle,
-		void(*OnJoined)(ErrorCode eCode),
-		void(*OnDisConnected)(),
-		void(*OnNewMemberJoined)(const char* pMemberId, const char* pDisplayName),
-		void(*OnMemberLeft)(const char* pMemberId, const char* pDisplayName),
-		void(*OnModifyLocalAudioStatus)(bool bOpen),
-		void(*OnModifyLocalVideoStatus)(bool bOpen),
-		void(*OnMemberEnableVideo)(const char* pMemberId, const char* pDisplayName),
-		void(*OnMemberDisableVideo)(const char* pMemberId, const char* pDisplayName, void* pRenderWin),
-		void(*OnMemberUnMuteAudio)(const char* pMemberId, const char* pDisplayName),
-		void(*OnMemberMuteAudio)(const char* pMemberId, const char* pDisplayName),
-		void(*OnSessionError)(const char* reason));
+		void* userData,
+		void(*OnJoined)(void* userData, ErrorCode eCode),
+		void(*OnDisConnected)(void* userData),
+		void(*OnNewMemberJoined)(void* userData, const char* pMemberId, const char* pDisplayName),
+		void(*OnMemberLeft)(void* userData, const char* pMemberId, const char* pDisplayName),
+		void(*OnModifyLocalAudioStatus)(void* userData, bool bOpen),
+		void(*OnModifyLocalVideoStatus)(void* userData, bool bOpen),
+		void(*OnMemberEnableVideo)(void* userData, const char* pMemberId, const char* pDisplayName),
+		void(*OnMemberDisableVideo)(void* userData, const char* pMemberId, const char* pDisplayName, void* pRenderWin),
+		void(*OnMemberUnMuteAudio)(void* userData, const char* pMemberId, const char* pDisplayName),
+		void(*OnMemberMuteAudio)(void* userData, const char* pMemberId, const char* pDisplayName),
+		void(*OnSessionError)(void* userData, const char* reason));
 
 	/**
 	* 销毁shinevvSDK内部资源.
@@ -193,7 +195,7 @@ extern "C" {
 	SHINEVV_INTERFACE_API void __stdcall EnableMemberVideo(
 		void* handle,
 		const char* pMemberId,
-		void(*EnableMemberVideoResult)(bool bSucc, const char* pMemberId));
+		void(*EnableMemberVideoResult)(void* userData, bool bSucc, const char* pMemberId));
 
 	/**
 	* 不接收指定成员视频.
@@ -205,7 +207,7 @@ extern "C" {
 	SHINEVV_INTERFACE_API void __stdcall DisableMemberVideo(
 		void* handle,
 		const char* pMemberId,
-		void(*DisableMemberVideoResult)(bool bSucc, const char* pMemberId));
+		void(*DisableMemberVideoResult)(void* userData, bool bSucc, const char* pMemberId));
 
 	/**
 	* 接收指定成员音频.
@@ -217,7 +219,7 @@ extern "C" {
 	SHINEVV_INTERFACE_API void __stdcall EnableMemberAudio(
 		void* handle,
 		const char* pMemberId,
-		void(*EnableMemberAudioResult)(bool bSucc, const char* pMemberId));
+		void(*EnableMemberAudioResult)(void* userData, bool bSucc, const char* pMemberId));
 
 	/**
 	* 不接收指定成员音频.
@@ -229,7 +231,7 @@ extern "C" {
 	SHINEVV_INTERFACE_API void __stdcall DisableMemberAudio(
 		void* handle,
 		const char* pMemberId,
-		void(*DisableMemberAudioResult)(bool bSucc, const char* pMemberId));
+		void(*DisableMemberAudioResult)(void* userData, bool bSucc, const char* pMemberId));
 
 	/**
 	* 获取视频设备信息.
@@ -238,7 +240,7 @@ extern "C" {
 	*/
 	SHINEVV_INTERFACE_API void __stdcall GetVideoDevices(
 		void* handle, 
-		void(*GetVideoDevicesResult)(const DeviceInfo sDeviceInfos[], int nDeviceNum));
+		void(*GetVideoDevicesResult)(void* userData, const DeviceInfo sDeviceInfos[], int nDeviceNum));
 
 	/**
 	* 获取音频设备信息.
@@ -247,7 +249,7 @@ extern "C" {
 	*/
 	SHINEVV_INTERFACE_API void __stdcall GetAudioDevices(
 		void* handle,
-		void(*GetAudioDevicesResult)(const DeviceInfo sDeviceInfos[], int nDeviceNum));
+		void(*GetAudioDevicesResult)(void* userData, const DeviceInfo sDeviceInfos[], int nDeviceNum));
 
 	/**
 	* 指定摄像头.
@@ -258,7 +260,7 @@ extern "C" {
 	SHINEVV_INTERFACE_API void __stdcall SetVideoDevice(
 		void* handle,
 		int nIndex,
-		void(*SetVideoDeviceResult)(bool bSucc));
+		void(*SetVideoDeviceResult)(void* userData, bool bSucc));
 
 	/**
 	* 指定输入分辨率.
@@ -273,7 +275,7 @@ extern "C" {
 		int nWidth,
 		int nHeight, 
 		int nfps,
-		void(*OnGetOutputFormatResult)(int nWidth, int nHeight, int fps));
+		void(*OnGetOutputFormatResult)(void* userData, int nWidth, int nHeight, int fps));
 
 
 	/*******************************************
@@ -300,7 +302,7 @@ extern "C" {
 		int nWidth, 
 		int nHeight,
 		bool bShow,
-		void(*OnCreatePaletteResult)(bool bSucc));
+		void(*OnCreatePaletteResult)(void* userData, bool bSucc));
 
 	/**
 	* 销毁画板.
@@ -318,7 +320,24 @@ extern "C" {
 	SHINEVV_INTERFACE_API void __stdcall ShowPalette(
 		void* handle,
 		bool bShow,
-		void(*OnShowPaletteResult)(bool bSucc));
+		void(*OnShowPaletteResult)(void* userData, bool bSucc));
+
+	/**
+	* 移动画板.
+	* @param handle						shinevv句柄
+	* @param nLeft						目标坐标水平位置
+	* @param nTop						目标坐标垂直位置
+	* @param nTop						目标画板宽度
+	* @param nTop						目标画板高度
+	* @param OnShowPaletteResult	    移动画板结果回调
+	*/
+	SHINEVV_INTERFACE_API void __stdcall MovePalette(
+		void* handle,
+		int nLeft,
+		int nTop,
+		int nWidth,
+		int nHeight,
+		void(*OnMovePaletteResult)(void* userData, bool bSucc));
 
 	/**
 	* 设置画笔类型.
@@ -329,7 +348,7 @@ extern "C" {
 	SHINEVV_INTERFACE_API void __stdcall SetPalettePenType(
 		void* handle,
 		PenType nType,
-		void(*OnSetPalettePenTypeResult)(bool bSucc));
+		void(*OnSetPalettePenTypeResult)(void* userData, bool bSucc));
 
 	/**
 	* 设置画笔宽度.
@@ -340,7 +359,7 @@ extern "C" {
 	SHINEVV_INTERFACE_API void __stdcall SetPalettePenWidth(
 		void* handle,
 		float fWidth,
-		void(*OnSetPalettePenWidthResult)(bool bSucc));
+		void(*OnSetPalettePenWidthResult)(void* userData, bool bSucc));
 
 	/**
 	* 设置画笔颜色.
@@ -355,7 +374,7 @@ extern "C" {
 		unsigned char uRed, 
 		unsigned char uGreen, 
 		unsigned char uBlue,
-		void(*OnSetPalettePenColorResult)(bool bSucc));
+		void(*OnSetPalettePenColorResult)(void* userData, bool bSucc));
 
 #ifdef __cplusplus
 }
