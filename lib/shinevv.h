@@ -99,13 +99,14 @@ extern "C" {
 		void(*OnJoined)(void* userData, ErrorCode eCode),
 		void(*OnDisConnected)(void* userData),
 		void(*OnNewMemberJoined)(void* userData, const char* pMemberId, const char* pDisplayName),
-		void(*OnMemberLeft)(void* userData, const char* pMemberId, const char* pDisplayName),
+		void(*OnMemberLeft)(void* userData, const char* pMemberId),
 		void(*OnModifyLocalAudioStatus)(void* userData, bool bOpen),
 		void(*OnModifyLocalVideoStatus)(void* userData, bool bOpen),
-		void(*OnMemberEnableVideo)(void* userData, const char* pMemberId, const char* pDisplayName),
-		void(*OnMemberDisableVideo)(void* userData, const char* pMemberId, const char* pDisplayName, void* pRenderWin),
-		void(*OnMemberUnMuteAudio)(void* userData, const char* pMemberId, const char* pDisplayName),
-		void(*OnMemberMuteAudio)(void* userData, const char* pMemberId, const char* pDisplayName),
+		void(*OnMemberEnableVideo)(void* userData, const char* pMemberId),
+		void(*OnMemberDisableVideo)(void* userData, const char* pMemberId),
+		void(*OnMemberUnMuteAudio)(void* userData, const char* pMemberId),
+		void(*OnMemberMuteAudio)(void* userData, const char* pMemberId),
+		void(*OnMemberResolutionChanged)(void* userData, const char* pMemberId, int nWidth, int nHeight),
 		void(*OnSessionError)(void* userData, const char* reason));
 
 	/**
