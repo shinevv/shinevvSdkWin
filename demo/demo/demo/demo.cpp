@@ -64,7 +64,7 @@ BOOL CdemoApp::InitInstance()
 
 	AllocConsole();                           // 开辟控制台
 	SetConsoleTitle(_T("Debug Output"));      // 设置控制台窗口标题
-	freopen("CONOUT$", "w", stdout);          // 重定向输出
+	//freopen("CONOUT$", "w", stdout);          // 重定向输出
 	
 	// Standard initialization
 	// If you are not using these features and wish to reduce the size

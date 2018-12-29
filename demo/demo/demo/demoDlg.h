@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <string>
 #include <map>
+#include "afxcolorbutton.h"
+#include "afxcmn.h"
 
 typedef std::map<std::string, HWND> mapMemberWindow;
 typedef std::pair<std::string, HWND> pairMemberWindow;
@@ -20,6 +22,7 @@ typedef std::pair<CString, int> pairCameraIndex;
 #define WM_JOIN_SUCCESS				WM_USER+0x110
 #define WM_JOIN_FAIL				WM_USER+0x111
 #define WM_MEMBER_ENABLE_VIDEO		WM_USER+0x112
+#define WM_MEMBER_DISBLE_VIDEO      WM_USER+0x113
 
 // CdemoDlg dialog
 class CdemoDlg : public CDialogEx
@@ -62,9 +65,9 @@ public:
 	// 画笔类型
 	CComboBox m_ctlPenType;
 	// 画笔大小
-	CComboBox m_ctlPenSize;
+	//CComboBox m_ctlPenSize;
 	// 画笔颜色
-	CComboBox m_ctlPenColor;
+	//CComboBox m_ctlPenColor;
 	// 电子白板
 	CStatic m_ctlBoard;
 
@@ -126,6 +129,63 @@ public:
 	afx_msg void OnCbnSelchangePencolor();
 	afx_msg void OnMove(int x, int y);
 	afx_msg void OnDestroy();
+	// room token
+	CString m_token;
+	CMFCColorButton m_ctlPenColor;
+	afx_msg void OnBnClickedPencolor();
+	UINT m_iPenSize;
+	afx_msg void OnDeltaposSpin(NMHDR *pNMHDR, LRESULT *pResult);
+	CButton m_ctlA1;
+	CButton m_ctlV1;
+	CButton m_ctlA2;
+	CButton m_ctlV2;
+	CButton m_ctlA3;
+	CButton m_ctlV3;
+	CButton m_ctlA4;
+	CButton m_ctlV4;
+
+
+	private:
+		void ModifyVideoStatus(std::string memberid, bool bOpen);
+		void ModifyAudioStatus(std::string memberid, bool bOpen);
+		void ShowMemberVideoWnd(std::string memberid, bool bShow);
+		void Reset();
+protected:
+	afx_msg LRESULT OnMemberDisbleVideo(WPARAM wParam, LPARAM lParam);
+public:
+	afx_msg void OnClose();
+	BOOL m_bEnableAudio5;
+	CButton m_ctlA5;
+	CButton m_ctlA6;
+	BOOL m_bEnableAudio6;
+	CButton m_ctlA7;
+	BOOL m_bEnableAudio7;
+	CButton m_ctlA8;
+	BOOL m_bEnableAudio8;
+	CStatic m_ctlVideo5;
+	CStatic m_ctlVideo6;
+	CStatic m_ctlVideo7;
+	CStatic m_ctlVideo8;
+	CButton m_ctlV5;
+	BOOL m_bEnableVideo5;
+	CButton m_ctlV6;
+	BOOL m_bEnableVideo6;
+	CButton m_ctlV7;
+	BOOL m_bEnableVideo7;
+	CButton m_ctlV8;
+	BOOL m_bEnableVideo8;
+	std::string m_strRemoteMemberId5;
+	std::string m_strRemoteMemberId6;
+	std::string m_strRemoteMemberId7;
+	std::string m_strRemoteMemberId8;
+	afx_msg void OnClickedEnablevideo5();
+	afx_msg void OnClickedEnablevideo6();
+	afx_msg void OnClickedEnablevideo7();
+	afx_msg void OnClickedEnablevideo8();
+	afx_msg void OnClickedEnableaudio5();
+	afx_msg void OnClickedEnableaudio6();
+	afx_msg void OnClickedEnableaudio7();
+	afx_msg void OnClickedEnableaudio8();
 };
 
 void OnJoined(void* userData, ErrorCode eCode);
@@ -142,7 +202,7 @@ void OnModifyLocalVideoStatus(void* userData, bool bOpen);
 
 void OnMemberEnableVideo(void* userData, const char* pMemberId, const char* pDisplayName);
 
-void OnMemberDisableVideo(void* userData, const char* pMemberId, const char* pDisplayName, void* pRenderWin);
+void OnMemberDisableVideo(void* userData, const char* pMemberId, const char* pDisplayName/*, void* pRenderWin*/);
 
 void OnMemberUnMuteAudio(void* userData, const char* pMemberId, const char* pDisplayName);
 
@@ -150,9 +210,16 @@ void OnMemberMuteAudio(void* userData, const char* pMemberId, const char* pDispl
 
 void OnSessionError(void* userData, const char* reason);
 
+void OnRecvUserMessage(void* userData, const char* pHistoryMessage);
+
 void GetVideoDevicesResult(void* userData, const DeviceInfo sDeviceInfos[], int nDeviceNum);
 
 void GetAudioDevicesResultCallBack(void* userData, const DeviceInfo sDeviceInfos[], int nDeviceNum);
 
 void SetCameraIndexRes(void* userData, bool succ);
+
+void OnMemberEnableScreenShare(void* userData, const char* pMemberId, const char* pDisplayName);
+void OnMemberDisableScreenShare(void* userData, const char* pMemberId, const char* pDisplayName);
+void onEnableMemberVideoResult(void* userData, bool bSucc, const char* pMemberId);
+void onDisableMemberVideoResult(void* userData, bool bSucc, const char* pMemberId);
 
