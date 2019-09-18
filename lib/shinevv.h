@@ -11,7 +11,7 @@
 extern "C" {
 #endif
 
-
+	typedef void(*OnVideoResolution)(int width, int height);
 	/**
 	* 错误码
 	* @VVSuccess						加入房间成功
@@ -127,7 +127,7 @@ extern "C" {
 		void* handle,
 		const char* pMemberId,
 		void* pRenderWin,
-		bool bMirror);
+		bool bMirror, OnVideoResolution onVideoResulution=nullptr);
 
 	/**
 	* 指定屏幕共享渲染窗口.
@@ -270,6 +270,17 @@ extern "C" {
 		int nfps,
 		void(*OnGetOutputFormatResult)(void* userData, int nWidth, int nHeight, int fps));
 
+	/**
+	* 指定媒体流大小
+	* @param handle						shinevv句柄
+	* @param pMemberId					成员标识符
+	* @param profile					媒体流大小  “high” 或 “low”
+	*/
+	SHINEVV_INTERFACE_API void __stdcall SetMemberProfile(
+		void* handle,
+		const char* pMemberId,
+		const char* profile
+	);
 
 	/*******************************************
 	* 以下为画板相关接口
